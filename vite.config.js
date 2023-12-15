@@ -29,6 +29,7 @@ export default defineConfig({
       },
     }),
   ],
+  base: process.env.NODE_ENV === 'production' ? '/vuetify-project/' : '/',
   define: { 'process.env': {} },
   resolve: {
     alias: {
