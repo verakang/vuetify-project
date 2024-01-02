@@ -11,11 +11,55 @@ onMounted(() => {
   let myChart = echarts.init(chartDom);
   let option;
 
+  option = {
+        color: ['#E67A74'],
+        title: {
+          text: '大直站水位監測'
+        },
+        tooltip: {
+          trigger: 'axis'
+        },
+        legend: {
+          data: ['水位值']
+        },
+        grid: {
+          left: '3%',
+          right: '5%',
+          bottom: '10%',
+          containLabel: true,
+        },
+        toolbox: {
+          feature: {
+            saveAsImage: {}
+          }
+        },
+        xAxis: {
+          type: 'category',
+          boundaryGap: false,
+          data: []
+        },
+        yAxis: {
+          type: 'value'
+        },
+        series: [
+          {
+            name: '水位值',
+            type: 'line',
+            stack: 'Total',
+            data: []
+          }
+        ]
+      };
   axios
     .get('/API/Sewer/Get?stationNo=&loginId=sewer01&dataKey=BD3E513A')
     .then( function (res) {
       sewerData.value = res.data.data.filter(( item ) => item.stationName.includes('大直'))
-      // console.log(sewerData)
+      const opt = JSON.parse(JSON.stringify(option))
+      opt.xAxis.data = sewerData.value.map(i => i.recTime)
+      opt.series[0].data = sewerData.value.map(i => i.levelOut)
+      option = opt
+      // console.log('sewerData', opt)
+      option && myChart.setOption(option);
     })
 
   window.addEventListener(
@@ -25,47 +69,6 @@ onMounted(() => {
     },
     false
   )
-
-  option = {
-    color: ['#E67A74'],
-    title: {
-      text: '大直站水位監測'
-    },
-    tooltip: {
-      trigger: 'axis'
-    },
-    legend: {
-      data: ['水位值']
-    },
-    grid: {
-      left: '3%',
-      right: '5%',
-      bottom: '10%',
-      containLabel: true,
-    },
-    toolbox: {
-      feature: {
-        saveAsImage: {}
-      }
-    },
-    xAxis: {
-      type: 'category',
-      boundaryGap: false,
-      data: ['202312151550', '202312151600', '202312151600', '202312151600', '202312151600']
-    },
-    yAxis: {
-      type: 'value'
-    },
-    series: [
-      {
-        name: '水位值',
-        type: 'line',
-        stack: 'Total',
-        data: [1.14, 1.16, 6.94, 3.449, 4.01]
-      }
-    ]
-  };
-  option && myChart.setOption(option);
 })
 
 </script>

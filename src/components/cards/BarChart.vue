@@ -11,28 +11,6 @@ onMounted(() => {
   let myChart = echarts.init(chartDom);
   let option;
 
-    // 「精材科技股份有限公司」工廠的 CO2 年排放量
-  axios
-    .get('/api/v2/ghg_p_01?api_key=e8dd42e6-9b8b-43f8-991e-b3dee723a52d&limit=1000&sort=ImportDate')
-    .then( function (res) {
-      co2Data.value = res.data.records.filter(( item ) => item.companyname.includes('精材科技股份有限公司') && item.app_year.includes('105'))
-      // console.log(co2Data)
-      // console.log(co2Data.value[2].co2)
-
-      // option.series[0].data[0] = co2Data.value[0].co2
-      // option.series[0].data[1] = co2Data.value[1].co2
-      // option.series[0].data[2] = co2Data.value[2].co2
-      // console.log(co2Data.value[0].co2, co2Data.value[1].co2, co2Data.value[2].co2)
-    })
-
-  window.addEventListener(
-    "resize",
-    () => {
-      myChart.resize()
-    },
-    false
-  )
-
   option = {
     color: ['#9CD1F8'],
     title: {
@@ -46,19 +24,38 @@ onMounted(() => {
     },
     xAxis: {
     type: 'category',
-    data: [ '精材科技中壢三廠' , '精材科技中壢二廠', '精材科技中壢廠' ]
+    data: []
   },
     yAxis: {
       type: 'value'
     },
     series: [
       {
-        data: [385.24, 60.21, 58.23],
+        data: [],
         type: 'bar'
       }
     ]
   };
-  option && myChart.setOption(option);
+    // 「精材科技股份有限公司」工廠的 CO2 年排放量
+  axios
+    .get('/api/v2/ghg_p_01?api_key=e8dd42e6-9b8b-43f8-991e-b3dee723a52d&limit=1000&sort=ImportDate')
+    .then( function (res) {
+      co2Data.value = res.data.records.filter(( item ) => item.companyname.includes('精材科技股份有限公司') && item.app_year.includes('105'))
+      console.log(co2Data)
+      const opt = JSON.parse(JSON.stringify(option))
+      opt.xAxis.data = co2Data.value.map(i => i.companyname.substring(10))
+      opt.series[0].data = co2Data.value.map(i => i.co2)
+      option = opt
+      option && myChart.setOption(option);
+    })
+
+  window.addEventListener(
+    "resize",
+    () => {
+      myChart.resize()
+    },
+    false
+  )
 })
 
 </script>

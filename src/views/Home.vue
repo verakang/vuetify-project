@@ -101,21 +101,17 @@ v-row.px-6
     BarChart.bg-white.pt-5.ps-3
 
 v-row.px-6
-  v-col(cols="12" md="4")
+  v-col(cols="12" md="4").h-100
     DeviceCard
   v-col(cols="12" md="8")
-    v-row
-      v-col(cols="12")
-        v-card(elevation=0).pa-5
-          .v-row
-            .v-col-6.v-col-md-3(v-for="item in deviceData.group1")
-              GroupCard(:key="item.id" :title="item.title" :content="item.content" :unit="item.unit")
-    v-row
-      v-col(cols="12")
-        v-card(elevation=0).pa-5
-          .v-row
-            .v-col-6.v-col-md-3(v-for="item in deviceData.group2")
-              GroupCard(:key="item.id" :title="item.title" :content="item.content" :unit="item.unit")
+    v-card(elevation=0).pa-5.mb-5
+      .v-row
+        .v-col-6.v-col-md-3(v-for="item in deviceData.group1")
+          GroupCard(:key="item.id" :title="item.title" :content="item.content" :unit="item.unit")
+    v-card(elevation=0).pa-5
+      .v-row
+        .v-col-6.v-col-md-3(v-for="item in deviceData.group2")
+          GroupCard(:key="item.id" :title="item.title" :content="item.content" :unit="item.unit")
 
 </template>
 
